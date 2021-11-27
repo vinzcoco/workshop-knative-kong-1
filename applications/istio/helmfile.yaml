@@ -1,0 +1,12 @@
+repositories:
+  - name: istio
+    url: https://istio-release.storage.googleapis.com/charts
+
+releases:
+- name: istio
+  namespace: istio-system
+  chart: istio-base
+  version: 1.0.0
+  installed: true
+  values:
+    - values.yaml
