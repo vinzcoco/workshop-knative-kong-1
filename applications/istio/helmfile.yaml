@@ -15,7 +15,7 @@ releases:
     version: 1.12.0
     wait: true
   - name: istio-ingress
-    namespace: istio-ingres
+    namespace: istio-ingress
     createNamespace: true
     labels:
       istio-injection: enabled
