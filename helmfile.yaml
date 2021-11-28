@@ -15,16 +15,16 @@ helmDefaults:
   # ------------------------------------------------------------
 
 helmfiles:
+  - path: applications/gitlab-runner/helmfile.yaml
+  - path: applications/istio/helmfile.yaml
 #  - path: applications/cert-manager/helmfile.yaml
 #  - path: applications/cilium/helmfile.yaml
 #  - path: applications/ingress/helmfile.yaml
 #  - path: applications/cert-manager-1-4/helmfile.yaml
 #  - path: applications/sentry/helmfile.yaml
-  - path: applications/gitlab-runner/helmfile.yaml
 #  - path: applications/elastic-stack/helmfile.yaml
 #  - path: applications/prometheus/helmfile.yaml
 #  - path: applications/vault/helmfile.yaml
 #  - path: applications/fluentd/helmfile.yaml
 #  - path: applications/falco/helmfile.yaml
 #  - path: applications/apparmor/helmfile.yaml
-#  - path: applications/istio/helmfile.yaml
