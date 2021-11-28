@@ -7,7 +7,9 @@ releases:
   namespace: istio-system
   chart: istio/base
   installed: true
+  version: 1.12.0
 - name: istiod
   namespace: istio-system
   chart: istio/istiod
   installed: true
+  version: 1.12.0

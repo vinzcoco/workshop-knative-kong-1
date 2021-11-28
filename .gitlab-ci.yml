@@ -30,3 +30,5 @@ apply:
     - gl-helmfile --file $CI_PROJECT_DIR/helmfile.yaml apply --suppress-secrets
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  tags:
+    - cluster
