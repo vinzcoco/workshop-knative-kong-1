@@ -1,0 +1,9 @@
+releases:
+  - name: external-dns
+    namespace: external-dns
+    chart: ./gke
+    version: v0.1.0
+    installed: true
+    createNamespace: true
+    labels:
+      istio-injection: enabled

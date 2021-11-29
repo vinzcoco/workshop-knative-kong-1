@@ -1,0 +1,4 @@
+name: external-dns
+version: v0.1.0
+description: "Local chart to install external-dns with istio"
+

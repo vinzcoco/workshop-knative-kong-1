@@ -1,0 +1,3 @@
+istio:
+  install: true
+  release: 1.11.4
