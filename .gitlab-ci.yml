@@ -31,5 +31,5 @@ apply:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   tags:
-    - cluster
-    - shared
+    - docker
+    - $KUBERNETES_RUNNER
