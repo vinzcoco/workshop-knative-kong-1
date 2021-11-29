@@ -14,12 +14,12 @@ releases:
     installed: true
     version: 1.12.0
     wait: true
-  - name: istio-ingress
-    namespace: istio-ingress
-    createNamespace: true
-    labels:
-      istio-injection: enabled
-    chart: istio/gateway
-    installed: true
-    version: 1.12.0
-    wait: true
+# - name: istio-ingress
+#   namespace: istio-ingress
+#   createNamespace: true
+#   labels:
+#     istio-injection: enabled
+#   chart: istio/gateway
+#   installed: true
+#   version: 1.12.0
+#   wait: true
