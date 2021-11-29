@@ -20,8 +20,8 @@ detect-helm2-releases:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-apply:
-  stage: deploy
+apply-base:
+  stage: deploy-base
   image: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.1.0"
   environment:
     name: production
@@ -30,3 +30,16 @@ apply:
     - gl-helmfile --file $CI_PROJECT_DIR/helmfile.yaml apply --suppress-secrets
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+apply-app:
+  stage: deploy-app
+  image: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.1.0"
+  environment:
+    name: production
+  script:
+    - gl-ensure-namespace gitlab-managed-apps
+    - gl-helmfile --file $CI_PROJECT_DIR/helmfile-app.yaml apply --suppress-secrets
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  tags:
+    - cluster
