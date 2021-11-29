@@ -4,8 +4,8 @@ helmDefaults:
 
 helmfiles:
   - path: applications/cert-manager/helmfile.yaml
-  - path: applications/istio/helmfile.yaml
-  - path: applications/external-dns/helmfile.yaml
+#  - path: applications/istio/helmfile.yaml
+#  - path: applications/external-dns/helmfile.yaml
 #  - path: applications/prometheus/helmfile.yaml
 #  - path: applications/elastic-stack/helmfile.yaml
 #  - path: applications/fluentd/helmfile.yaml
