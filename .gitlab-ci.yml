@@ -49,3 +49,4 @@ apply-app:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   tags:
     - cluster
+    - kubernetes
