@@ -189,3 +189,75 @@ EOF
 ```bash 
 
 ```
+
+
+### Install knative
+
+https://knative.dev/docs/getting-started/
+```shell
+minikube profile knative
+minikube start -p knative --cpus=6 --memory=8192 --addons=ingress
+minikube -p knative tunnel
+```
+
+#### Install the Knative Serving component 
+```shell
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.0.0/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.0.0/serving-core.yaml
+```
+
+#### Install a networking layer - Istio
+```shell
+kubectl apply -l knative.dev/crd-install=true -f https://github.com/knative/net-istio/releases/download/knative-v1.0.0/istio.yaml
+kubectl apply -f https://github.com/knative/net-istio/releases/download/knative-v1.0.0/istio.yaml
+kubectl apply -f https://github.com/knative/net-istio/releases/download/knative-v1.0.0/net-istio.yaml
+kubectl --namespace istio-system get service istio-ingressgateway
+```
+
+#### Deploy the first service - Hello World
+```shell
+kn service create helloworld3-go --image gcr.io/knative-samples/helloworld-go --env TARGET="Go Sample v1"
+kn service delete helloworld3-go
+```
+
+#### Deploy the service simple
+```shell
+kubectl create namespace demo1
+kubectl apply -f knative/simple/all.yml
+sudo sudo bash -c 'echo "127.0.0.1 www.demo1.example.com blog.demo1.example.com meteo.demo1.example.com" >> /etc/hosts'
+```
+
+#### Deploy the service with scalability
+##### Add HPA serving to Knative
+```shell
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.0.0/serving-hpa.yaml
+```
+
+##### Deploy services
+```shell
+kubectl create namespace demo2
+kubectl apply -f knative/scalable/all.yml
+sudo sudo bash -c 'echo "127.0.0.1 www.demo2.example.com blog.demo2.example.com meteo.demo2.example.com" >> /etc/hosts'
+```
+
+#### Deploy the service with Kong
+##### Install kong
+
+```shell
+kubectl create namespace demo3
+kubectl label namespace demo3 istio-injection=enabled
+
+helm repo add kong https://charts.konghq.com
+helm repo update
+helm install -n demo3 kong kong/kong
+kubectl patch configmap/config-network \
+  --namespace knative-serving \
+    --type merge \
+      --patch '{"data":{"ingress.class":"kong"}}'
+```
+##### Deploy services
+```shell
+kubectl create namespace demo3
+kubectl apply -f knative/kong/all.yml
+sudo sudo bash -c 'echo "127.0.0.1 www.demo3.example.com blog.demo3.example.com meteo.demo3.example.com" >> /etc/hosts'
+```

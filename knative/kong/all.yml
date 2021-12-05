@@ -1,0 +1,174 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: blog
+  namespace: demo3
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '1'
+        autoscaling.knative.dev/metric: 'rps'
+        autoscaling.knative.dev/target: '4'
+    spec:
+      containers:
+        - image: gcr.io/winzana-workshop/knative-kong/blog:v1.0.7
+          command: [ 'node', './dist/apps/api/blog/main.js' ]
+          env:
+            - name: port
+              value: '8080'
+            - name: NODE_ENV
+              value: 'production'
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: blog-service-host-rewrite
+  # The plugin must be created in the same namespace as the ingress.
+  namespace: demo3
+plugin: request-transformer
+config:
+  add:
+    headers:
+      - "Host: blog.demo3.svc.cluster.local"
+  replace:
+    headers:
+      - "Host: blog.demo3.svc.cluster.local"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: blog-service-ingress
+  # The ingress must be created in the same namespace as the kong-proxy service.
+  namespace: demo3
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: blog-service-host-rewrite
+spec:
+  rules:
+    - host: "api.localhost"
+      http:
+        paths:
+          - path: /blog
+            pathType: Prefix
+
+            backend:
+              service:
+                name: kong-kong-proxy
+                port:
+                  number: 80
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: meteo
+  namespace: demo3
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: '2'
+        autoscaling.knative.dev/metric: 'rps'
+        autoscaling.knative.dev/target: '4'
+    spec:
+      containers:
+        - image: gcr.io/winzana-workshop/knative-kong/meteo:v1.0.7
+          command: [ 'node', './dist/apps/api/meteo/main.js' ]
+          env:
+            - name: port
+              value: '8080'
+            - name: NODE_ENV
+              value: 'production'
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: meteo-service-host-rewrite
+  # The plugin must be created in the same namespace as the ingress.
+  namespace: demo3
+plugin: request-transformer
+config:
+  add:
+    headers:
+      - "Host: meteo.demo3.svc.cluster.local"
+  replace:
+    headers:
+      - "Host: meteo.demo3.svc.cluster.local"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: meteo-service-ingress
+  # The ingress must be created in the same namespace as the kong-proxy service.
+  namespace: demo3
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: meteo-service-host-rewrite
+spec:
+  rules:
+    - host: "api.localhost"
+      http:
+        paths:
+          - path: /meteo
+            pathType: Prefix
+            backend:
+              service:
+                name: kong-kong-proxy
+                port:
+                  number: 80
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: www
+  namespace: demo3
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/metric: 'rps'
+        autoscaling.knative.dev/target: '4'
+    spec:
+      containers:
+        - image: gcr.io/winzana-workshop/knative-kong/front:v1.0.7
+---
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: front-service-host-rewrite
+  # The plugin must be created in the same namespace as the ingress.
+  namespace: demo3
+plugin: request-transformer
+config:
+  add:
+    headers:
+      - "Host: www.demo3.svc.cluster.local"
+  replace:
+    headers:
+      - "Host: www.demo3.svc.cluster.local"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: front-service-ingress
+  # The ingress must be created in the same namespace as the kong-proxy service.
+  namespace: demo3
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: "true"
+    konghq.com/plugins: front-service-host-rewrite
+spec:
+  rules:
+    - host: "localhost"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kong-kong-proxy
+                port:
+                  number: 80
