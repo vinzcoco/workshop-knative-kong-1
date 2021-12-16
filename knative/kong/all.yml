@@ -133,7 +133,7 @@ spec:
         autoscaling.knative.dev/target: '4'
     spec:
       containers:
-        - image: gcr.io/winzana-workshop/knative-kong/front:v1.3.0 # to use KONG use 1.4.0
+        - image: gcr.io/winzana-workshop/knative-kong/front:v1.4.0 # to use KONG use 1.4.0
 ---
 apiVersion: configuration.konghq.com/v1
 kind: KongPlugin
