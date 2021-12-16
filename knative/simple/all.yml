@@ -15,6 +15,12 @@ spec:
               value: '8080'
             - name: NODE_ENV
               value: 'production'
+          # resources:
+          #   requests:
+          #     cpu: 100m
+          #     memory: 640M
+          #   limits:
+          #     cpu: 1
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -42,4 +48,4 @@ spec:
   template:
     spec:
       containers:
-        - image: gcr.io/winzana-workshop/knative-kong/front:v1.0.5
+        - image: gcr.io/winzana-workshop/knative-kong/front:v1.1.0

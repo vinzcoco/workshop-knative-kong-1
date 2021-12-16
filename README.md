@@ -182,22 +182,33 @@ spec:
 EOF
 ```
 
-```bash 
-
-```
-
-```bash 
-
-```
-
-
 ### Install knative
 
 https://knative.dev/docs/getting-started/
+
+#### Install Cluster with k3d
+```shell
+k3d cluster create dev  \
+          -p "443:443@loadbalancer" \
+          -p "80:80@loadbalancer" \
+          -p "8081:30080@loadbalancer" \
+          -p "8441:30443@loadbalancer" \
+          --k3s-arg "--disable=traefik@server:*" \
+          --k3s-arg "--cluster-domain=example.com@loadbalancer" \
+          --servers 1 \
+          --api-port 6443 \
+          --agents 2 \
+          --wait
+k3d cluster stop dev         
+```
+#### Install Cluster with Minikube
+
 ```shell
 minikube profile knative
 minikube start -p knative --cpus=6 --memory=8192 --addons=ingress
 minikube -p knative tunnel
+minikube stop -p knative
+minikube destroy -p knative
 ```
 
 #### Install the Knative Serving component 
@@ -224,7 +235,7 @@ kn service delete helloworld3-go
 ```shell
 kubectl create namespace demo1
 kubectl apply -f knative/simple/all.yml
-sudo sudo bash -c 'echo "127.0.0.1 www.demo1.example.com blog.demo1.example.com meteo.demo1.example.com" >> /etc/hosts'
+sudo bash -c 'echo "127.0.0.1 www.demo1.example.com blog.demo1.example.com meteo.demo1.example.com" >> /etc/hosts'
 ```
 
 #### Deploy the service with scalability

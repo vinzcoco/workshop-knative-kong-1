@@ -56,4 +56,4 @@ spec:
         autoscaling.knative.dev/target: '4'
     spec:
       containers:
-        - image: gcr.io/winzana-workshop/knative-kong/front:v1.0.5
+        - image: gcr.io/winzana-workshop/knative-kong/front:v1.2.0
